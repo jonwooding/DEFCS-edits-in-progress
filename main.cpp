@@ -22,26 +22,29 @@
 
 #include "stream.h"
 
-void splash();
+void splash(void);
 
 int main(void) {
-    bandData        band;
-    int             row, col;
+    bandData        band;       // structure for user's data
+    int             row, col;   // screen location
 
     initscr();              // setup terminal screen
     cbreak();               // no need to press enter
     noecho();               // shhhh
     curs_set(0);            // invisible cursor for now
     keypad(stdscr, TRUE);    // arrow keys
-    scrollok(stdscr, TRUE);
+    scrollok(stdscr, TRUE); // autoscroll
 
-    splash();
-    getch();
+    splash();       // launch splash screen
+    getch();        // pause
     erase();
     curs_set(2);
 
+    /* Main Menu for DEFCon301 */
+    /* This will only complete after a user loads a preset */
+    /* Creating a new preset internally re-calls Main Menu */
 MAIN_MENU:
-    band = mainMenu();      // get pointer to open preset after it is opened
+    band = mainMenu();
     if ( band.maxidx == 0 ) {
         printw("Error! Please try again.\n");
         refresh();
@@ -49,34 +52,27 @@ MAIN_MENU:
     }
 
     getyx(stdscr,row,col);
-    chkend(row);
+    chkend(row);    // See if there is room to print
     printw("\n\nPress ENTER when you would like to start. . . \n");
     refresh();
-    while ( getch() != '\n' ) ;
+    while ( getch() != '\n' );
 
-    recordStream(band);
+    recordStream(band); // Set-up and record!
 
-    if ( band.maxidx != 0 ) {
-        free( band.hind );
-        free( band.lind );
-        free( band.dmx );
-        free( band.dmx_size );
-        free( band.avg );
-    }
+    goto MAIN_MENU;     // I know, I know...
 
-    goto MAIN_MENU;
-
-    return 0;
+    return 0;   // By design this will never happen. Ctrl+C to quit.
 
 }
 
+/** Splash Screen for DEFCon301 **/
 void splash() {
 
     int         R, C, i, j;
 
     R = getmaxy(stdscr);
     C = getmaxx(stdscr);
-
+    /* Fill blank space */
     for (i=0; i<R; i++) {
         for (j=0; j<C; j++) {
             printw("#");
@@ -97,8 +93,8 @@ void splash() {
     printw(  "                                                  ****** *     *     * \n");
     printw(  "                                                       * *     *     * \n");
     printw(  "                                                ******** ******* *******  \n");
-
     refresh();
 
+    return;
 
 }

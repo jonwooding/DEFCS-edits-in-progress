@@ -175,7 +175,7 @@ DMX_LOOP:
     rename("temp.txt",presetName.c_str());
     remove("temp.txt");
 
-    return 0;
+    return 1;
 }
 
 bandData openFile(string presetName) {

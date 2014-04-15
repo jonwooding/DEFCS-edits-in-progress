@@ -249,6 +249,15 @@ done:
     fftw_free(myData.out);
     fftw_destroy_plan(myData.method);
 
+    free( band.hind );
+    free( band.lind );
+    free( band.dmx );
+    free( band.dmx_size );
+    free( band.avg );
+    free( band.gain );
+    free( band.int_channels );
+
+
     return 0;
 
 }

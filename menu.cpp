@@ -4,6 +4,8 @@
     @version    1.02.14
 */
 
+/** mainMenu() | arrows() **/
+
 #include "menu.h"
 
 bandData mainMenu() {
@@ -15,7 +17,7 @@ bandData mainMenu() {
     vector<string>      dirlist;
     string              path = "./presets/";
 
-    dirArray = (int*) malloc( 50 * sizeof(int) ); // To store dirlist locations
+    dirArray = (int*) malloc( 50 * sizeof(int) ); // To store dirlist locations (presets)
     scrollok(stdscr, TRUE);
 
 MAIN_MENU:
@@ -30,7 +32,7 @@ MAIN_MENU:
     num_options = 2;
     move(row,col);
     refresh();
-    selection = arrows(num_options);
+    selection = arrows(num_options);    // UI Control function.
     erase();
 
     switch (selection) {
@@ -39,6 +41,7 @@ MAIN_MENU:
         getyx(stdscr,row,col);
         dirlist = listPresets();
         num_options = 0;
+        /* Show contents of ./presets */
         for (k=0; k<dirlist.size(); k++) {
             point = dirlist[k].c_str();
             if ( point[0] != '.' ) {
@@ -51,16 +54,16 @@ MAIN_MENU:
         refresh();
         selection = arrows(num_options)-1;
         fileName = path + dirlist[dirArray[selection]];
-        band = openFile(fileName);
+        band = openFile(fileName); //fileio.cpp
         refresh();
         break;
 
     case 2: // Create preset
-        fileName = namePreset();
+        fileName = namePreset(); // typeName.cpp
         printw("\nCreating file: %s. . .\n\n",fileName.c_str());
         fileName = path + fileName;
         refresh();
-        if ( !newPreset(fileName) ) {
+        if ( newPreset(fileName) ) {
             printw("\n\nPreset succesfully created.  Press enter to return to main menu.");
             refresh();
             getch();

@@ -5,4 +5,5 @@
 #include <ola/Logging.h>
 #include <ola/StreamingClient.h>
 
-int recordStream(bandData band);
+
+int         recordStream(bandData band);
