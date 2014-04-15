@@ -7,3 +7,7 @@ git push origin master
 
 # CHECK
 git status
+
+# pulling
+git checkout master
+git pull https://github.com/jonwooding/DEFCS-edits-in-progress
