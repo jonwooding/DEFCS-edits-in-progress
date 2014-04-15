@@ -1,9 +1,9 @@
 #include <fftw3.h>
 
 typedef struct {
-    double              *in;
-    fftw_complex        *out;
-    fftw_plan            method;
+    float               *in;
+    fftwf_complex       *out;
+    fftwf_plan           method;
 }
 fftData;
 

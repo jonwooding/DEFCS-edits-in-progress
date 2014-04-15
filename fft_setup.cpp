@@ -8,13 +8,13 @@
 
 fftData setup(void) {
     int             N = FRAMES_PER_BUFFER + INPUT_PADDING;//NUM_SECONDS * SAMPLE_RATE;    // buffer size
-    double          *in;        // input array
-    fftw_complex    *out;       // output 2d array (float)
+    float           *in;        // input array
+    fftwf_complex   *out;       // output 2d array (float)
     fftData         myData;     // struct to hold it all
 
     // allocate memory
-    in = (double*) fftw_malloc( sizeof(double) * N);
-    out = (fftw_complex*) fftw_malloc( sizeof(fftw_complex) * N);
+    in = (float*) fftwf_malloc( sizeof(float) * N);
+    out = (fftwf_complex*) fftwf_malloc( sizeof(fftwf_complex) * N);
 
     // let our struct get the pointers
 
@@ -24,7 +24,7 @@ fftData setup(void) {
     myData.in   =   in;
     myData.out  =   out;
     // create the plan - DFT, real2complex, 1 dimensional input
-    myData.method = fftw_plan_dft_r2c_1d(N, myData.in, myData.out, FFTW_MEASURE);
+    myData.method = fftwf_plan_dft_r2c_1d(N, myData.in, myData.out, FFTW_MEASURE);
 
     return myData;
 

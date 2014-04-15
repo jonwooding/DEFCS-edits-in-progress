@@ -130,7 +130,7 @@ int recordStream(bandData band) {
         }
         if ( in_max > in_threshold ) {
             /* FFT myData.in, store in myData.out */
-            fftw_execute(myData.method);
+            fftwf_execute(myData.method);
 
             maxx = 0;
             for (i=3; i<FRAMES_PER_BUFFER; i++) { /** k=3 :: don't count sub 60 hz **/
@@ -245,9 +245,9 @@ done:
         err = 1;          /* Always return 0 or 1, but no other return codes. */
     }
 
-    fftw_free(myData.in);
-    fftw_free(myData.out);
-    fftw_destroy_plan(myData.method);
+    fftwf_free(myData.in);
+    fftwf_free(myData.out);
+    fftwf_destroy_plan(myData.method);
 
     free( band.hind );
     free( band.lind );
