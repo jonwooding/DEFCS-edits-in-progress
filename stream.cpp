@@ -87,8 +87,8 @@ int recordStream(bandData band) {
     /***********Record buffer of audio, perform FFT, process, send*******************/
     /********************************************************************************/
 
-    FILE *pFile;
-    pFile = fopen("audio.csv","w");
+//    FILE *pFile;
+//    pFile = fopen("audio.csv","w");
 
     /**Set up static intensity channels*/
     for (i=0; i<band.num_int_channels; i++) {
@@ -196,7 +196,7 @@ int recordStream(bandData band) {
         }
 
         /** for examining mono stream **/
-
+/*
         timeout(-1);
         erase();
         for (i=1014; i<1034; i++) {
@@ -208,7 +208,7 @@ int recordStream(bandData band) {
         refresh();
         getch();
         timeout(0);
-
+*/
         data.frameIndex = 0;
 
         stopKey = getch();
@@ -218,7 +218,7 @@ int recordStream(bandData band) {
 
     }
 
-    fclose(pFile);
+ //   fclose(pFile);
 
     timeout(-1);        // return to blocking mode
 
