@@ -91,7 +91,9 @@ int recordStream(bandData band) {
     pFile = fopen("audio.csv","w");
 
     /**Set up static intensity channels*/
-    for (i=0; i<band.num_int_channels; i++) { buffer.SetChannel(i, 255); }
+    for (i=0; i<band.num_int_channels; i++) {
+        buffer.SetChannel(band.int_channels[i]-1, 255);
+    }
     ola_client.SendDmx(universe, buffer);
 
     /** Clear screen of any errors PA throws, create new instance of stdscr */
