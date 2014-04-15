@@ -196,10 +196,10 @@ int recordStream(bandData band) {
         }
 
         /** for examining mono stream **/
-        /*
+
         timeout(-1);
         erase();
-        for (i=1020; i<1045; i++) {
+        for (i=1014; i<1034; i++) {
 
             printw("%i\t%f\n",i, myData.in[i]);
             refresh();
@@ -208,7 +208,7 @@ int recordStream(bandData band) {
         refresh();
         getch();
         timeout(0);
-        */
+
         data.frameIndex = 0;
 
         stopKey = getch();
