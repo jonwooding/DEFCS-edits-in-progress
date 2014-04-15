@@ -20,7 +20,7 @@ int recordStream(bandData band) {
     int                 in_max = 0;
     unsigned int        universe = 1;
     float               red = 0.85;
-    double              intensity, maxx;
+    float               intensity, maxx;
 
     timeout(0);         // to allow key-press interrupt
 
@@ -248,7 +248,7 @@ done:
     fftwf_free(myData.in);
     fftwf_free(myData.out);
     fftwf_destroy_plan(myData.method);
-
+/*
     free( band.hind );
     free( band.lind );
     free( band.dmx );
@@ -256,6 +256,17 @@ done:
     free( band.avg );
     free( band.gain );
     free( band.int_channels );
+*/
+    delete[] band.lind;
+    delete[] band.hind;
+    for (i=0; i<band.maxidx; i++){
+        delete[] band.dmx[i];
+    }
+    delete[] band.dmx;
+    delete[] band.dmx_size;
+    delete[] band.avg;
+    delete[] band.gain;
+    delete[] band.int_channels;
 
 
     return 0;

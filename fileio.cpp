@@ -251,6 +251,8 @@ bandData openFile(string presetName) {
         return band;
     }
 
+
+/*
     band.idx = 0;
     band.maxidx = num_bands;
     band.lind = (int*) malloc( (num_bands - 1) * sizeof(int) );
@@ -265,6 +267,24 @@ bandData openFile(string presetName) {
     }
     k = 1;
     band.num_int_channels = int_channels.size();
+*/
+
+
+    band.idx = 0;
+    band.maxidx = num_bands;
+    band.lind = new int[num_bands-1];
+    band.hind = new int[num_bands-1];
+    band.dmx_size = new int[num_bands];
+    band.dmx = new int*[num_bands-1];
+    band.avg = new float[num_bands-1];
+    band.gain = new float[num_bands-1];
+    band.int_channels = new int[int_channels.size()];
+    for (k=0; k<int_channels.size(); k++) {
+        band.int_channels[k] = int_channels[k]-1;
+    }
+    k = 1;
+    band.num_int_channels = int_channels.size();
+
     preset.open(presetName.c_str());
     printw("\nLoading preset. . . \n");
     refresh();
@@ -319,7 +339,7 @@ bandData openFile(string presetName) {
                 refresh();
                 usleep(55000);
                 band.gain[k-1] = 1 + atof(temparray) / GAIN_SCALE;
-                band.dmx[k-1] = (int*) malloc ( i * sizeof(int) );
+                band.dmx[k-1] = new int[i];
                 for (n=0; n<=i; n++) {
                     band.dmx[k-1][n] = temp[n]-1;
                 }

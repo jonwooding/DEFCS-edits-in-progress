@@ -14,7 +14,7 @@ typedef struct {
     int                 *hind, *lind, *int_channels, *dmx_size;
     int                 **dmx;
     int                 idx, maxidx, num_int_channels;
-    double              *avg;
+    float               *avg;
     float               *gain;
 } bandData;
 
