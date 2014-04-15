@@ -1,0 +1,9 @@
+# COMPILE
+g++ *.cpp -o DEFCon.out -lfftw3 -lportaudio -lola -lolacommon -lm -lncurses
+
+# UPDATE to github
+git commit -am 'NAME'
+git push origin master
+
+# CHECK
+git status
