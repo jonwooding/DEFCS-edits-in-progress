@@ -16,8 +16,8 @@ int recordStream(bandData band) {
     int                 i, stopKey, totalFrames, numSamples,
                         numBytes, ind, diff, avg;
     int                 FLASH_THRESHOLD = 8;
-    int                 in_threshold = 10;
-    int                 in_max;
+    int                 in_threshold = 15;
+    int                 in_max = 0;
     unsigned int        universe = 1;
     float               red = 0.85;
     double              intensity, maxx;
@@ -30,7 +30,7 @@ int recordStream(bandData band) {
     /********************************************************************************/
     /************************Set up DMX server***************************************/
     /********************************************************************************/
-     // universe to use for sending data
+    // universe to use for sending data
 // turn on OLA logging
     ola::InitLogging(ola::OLA_LOG_WARN, ola::OLA_LOG_STDERR);
 
@@ -92,10 +92,9 @@ int recordStream(bandData band) {
 
     /**Set up static intensity channels*/
     for (i=0; i<band.num_int_channels; i++) {
-        buffer.SetChannel(band.int_channels[i]-1, 255);
+        buffer.SetChannel(band.int_channels[i], 255);
     }
     ola_client.SendDmx(universe, buffer);
-
     /** Clear screen of any errors PA throws, create new instance of stdscr */
     erase();
     refresh();
@@ -112,6 +111,7 @@ int recordStream(bandData band) {
     refresh();
 
     while (1) {
+        in_max = in_threshold;
         /* Grab a buffer of audio */
         err = Pa_StartStream( stream );
         if( err != paNoError ) goto done;
@@ -124,19 +124,20 @@ int recordStream(bandData band) {
         /* Create left and right array -- int to double */
         for ( i=0; i<data.maxFrameIndex; i++ ) { /** this is converting for mono too **/
             myData.in[i] = data.recordedSamples[i];
-            i++;
-        }
-
-        if ( in_max > in_threshold ) {
-        /* FFT myData.in, store in myData.out */
-        fftw_execute(myData.method);
-
-        maxx = 0;
-        for (i=3; i<FRAMES_PER_BUFFER; i++) { /** k=3 :: don't count sub 60 hz **/
-            if ( abs(myData.out[i][0]) > maxx ) {
-                maxx = abs(myData.out[i][0]);
+            if ( abs(myData.in[i]) > in_max ) {
+                in_max = abs(myData.in[i]);
             }
         }
+        if ( in_max > in_threshold ) {
+            /* FFT myData.in, store in myData.out */
+            fftw_execute(myData.method);
+
+            maxx = 0;
+            for (i=3; i<FRAMES_PER_BUFFER; i++) { /** k=3 :: don't count sub 60 hz **/
+                if ( abs(myData.out[i][0]) > maxx ) {
+                    maxx = abs(myData.out[i][0]);
+                }
+            }
 
             for ( ind=0; ind<band.maxidx; ind++ ) {
                 avg = 0;
@@ -181,10 +182,12 @@ int recordStream(bandData band) {
                 refresh();
                 sleep(5);
             }
-            /** If no input is present (maxx < 200) */
+            /** If no input is present */
         } else {
             buffer.Blackout();
-            for (i=0; i<band.num_int_channels; i++) { buffer.SetChannel(i, 255); } // static
+            for (i=0; i<band.num_int_channels; i++) {
+                buffer.SetChannel(band.int_channels[i], 255);
+            }
             if (!ola_client.SendDmx(universe, buffer)) {
                 printw("Problem sending DMX, will retry in 5. . .");
                 refresh();
@@ -194,16 +197,18 @@ int recordStream(bandData band) {
 
         /** for examining mono stream **/
         /*
+        timeout(-1);
         erase();
-        for (i=0; i<20; i++) {
+        for (i=1020; i<1045; i++) {
 
-            printw("%f\n", myData.in[i+100]);
+            printw("%i\t%f\n",i, myData.in[i]);
+            refresh();
 
         }
         refresh();
         getch();
+        timeout(0);
         */
-
         data.frameIndex = 0;
 
         stopKey = getch();

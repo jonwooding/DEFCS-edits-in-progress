@@ -10,9 +10,9 @@
                 ^^ alternate - record stereo but process mono (after analog summing)
                 add interrupt, run forever  <><>
                 intensity channels  <><>
-                no input cutoff
-                ^^ FIXME ^^ in_max
-                convert "stereo" to "mono"
+                no input cutoff <><>
+                ^^ FIXME ^^ in_max <><>
+                convert "stereo" to "mono"  ( TEST ON BBB )
                 flashing
                 ui backspace        <><>
                 display range of possible gains

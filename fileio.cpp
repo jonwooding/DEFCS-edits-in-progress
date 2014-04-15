@@ -25,10 +25,11 @@ int newPreset(string presetName) {
     preset.open(presetName.c_str());
     preset << "NAME\t\t\t" << presetName << endl;
 
+    printw("\n\nBegin by entering the bandwidth that you would like to control your lights.");
+    printw("\nMore bandwidths can be entered later.\n");
+
     while (1) {
         // Begin gathering user data
-        printw("\n\nBegin by entering the bandwidth that you would like to control your lights.");
-        printw("\nMore bandwidths can be entered later.\n");
 getFreq:
         printw("\nEnter lower cutoff frequency: ");
         refresh();
@@ -183,7 +184,7 @@ bandData openFile(string presetName) {
     vector<int>             temp;
     vector<int>             int_channels;
     unsigned int            num_bands, num_channels, response,
-                            row, col, k, ind;
+             row, col, k, ind;
     bandData                band;
     scrollok(stdscr, FALSE);
 
@@ -260,7 +261,7 @@ bandData openFile(string presetName) {
     band.gain = (float*) malloc( (num_bands - 1) * sizeof(float) );
     band.int_channels = (int*) malloc( int_channels.size() * sizeof(int) );
     for (k=0; k<int_channels.size(); k++) {
-        band.int_channels[k] = int_channels[k];
+        band.int_channels[k] = int_channels[k]-1;
     }
     k = 1;
     band.num_int_channels = int_channels.size();
@@ -284,13 +285,15 @@ bandData openFile(string presetName) {
             chkend(row);
             if ( line == bandline ) {
                 printw("Retrieving band %i. . .\n",k);
-                refresh(); usleep(55000);
+                refresh();
+                usleep(55000);
                 getline(preset,line);
                 band.lind[k-1] = round( atoi(line.c_str()) / skip );
                 getline(preset,line);
                 band.hind[k-1] = round( atoi(line.c_str()) / skip );
                 printw("Getting DMX channels for band %i\n",k);
-                refresh(); usleep(55000);
+                refresh();
+                usleep(55000);
                 ss.str(std::string());
                 bandline = "BAND";
                 ss << k+1;
@@ -313,7 +316,8 @@ bandData openFile(string presetName) {
                 i--; // for G selection
                 preset.seekg(pos);
                 printw("Retrieved %i channels. . .\n",i+1);
-                refresh(); usleep(55000);
+                refresh();
+                usleep(55000);
                 band.gain[k-1] = 1 + atof(temparray) / GAIN_SCALE;
                 band.dmx[k-1] = (int*) malloc ( i * sizeof(int) );
                 for (n=0; n<=i; n++) {
