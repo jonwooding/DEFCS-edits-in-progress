@@ -10,4 +10,4 @@ git status
 
 # pulling
 git checkout master
-git pull https://github.com/jonwooding/DEFCS-edits-in-progress
+git pull https://github.com/jonwooding/DEFCS-edits-in-progress master
