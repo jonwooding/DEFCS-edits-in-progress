@@ -247,12 +247,3 @@ done:
     return 0;
 
 }
-
-void dataProcessing(PaStream *stream, ola::DmxBuffer buffer) {
-
-
-
-
-
-}
-
