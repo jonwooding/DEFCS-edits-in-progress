@@ -298,7 +298,8 @@ bandData openFile(string presetName) {
         skip = SAMPLE_RATE / 2;
         skip = skip / ( (FRAMES_PER_BUFFER + INPUT_PADDING)/2 - 1 );
         while ( k <= num_bands && getline(preset,line)) {
-            bandline = "BAND";
+            i = 0;
+	    bandline = "BAND";
             ss.str(std::string());
             ss << k;
             bandline += ss.str();
@@ -348,7 +349,7 @@ bandData openFile(string presetName) {
                 }
                 band.dmx_size[k-1] = i;
                 temp.clear();
-                i = 0;
+                //i=0; 
                 k++;
             }
         }
