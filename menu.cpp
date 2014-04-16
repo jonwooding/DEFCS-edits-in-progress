@@ -11,13 +11,14 @@
 bandData mainMenu() {
     int                 row, col, selection, k;
     int                 num_options;
-    int                 *dirArray;
+//    int                 *dirArray;
     bandData            band;
     string              fileName, point;
     vector<string>      dirlist;
     string              path = "./presets/";
 
-    dirArray = (int*) malloc( 50 * sizeof(int) ); // To store dirlist locations (presets)
+//    dirArray = (int*) malloc( 50 * sizeof(int) ); // To store dirlist locations (presets)
+    int *dirArray = new int[50];
     scrollok(stdscr, TRUE);
 
 MAIN_MENU:
@@ -72,8 +73,8 @@ MAIN_MENU:
         break;
     }
 
-    free( dirArray );
-
+    //free( dirArray );
+    delete [] dirArray;
     return band;
 
 }
