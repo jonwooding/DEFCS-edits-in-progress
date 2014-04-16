@@ -55,6 +55,7 @@ MAIN_MENU:
         refresh();
         selection = arrows(num_options)-1;
         fileName = path + dirlist[dirArray[selection]];
+        delete [] dirArray;
         band = openFile(fileName); //fileio.cpp
         refresh();
         break;
@@ -74,7 +75,6 @@ MAIN_MENU:
     }
 
     //free( dirArray );
-    delete [] dirArray;
     return band;
 
 }
