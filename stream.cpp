@@ -6,6 +6,9 @@
 
 #include <math.h>
 #include "stream.h"
+#include <ola/DmxBuffer.h>
+#include <ola/Logging.h>
+#include <ola/StreamingClient.h>
 
 int recordStream(bandData band) {
     PaStreamParameters  inputParameters;
@@ -196,19 +199,19 @@ int recordStream(bandData band) {
         }
 
         /** for examining mono stream **/
-/*
-        timeout(-1);
-        erase();
-        for (i=1014; i<1034; i++) {
+        /*
+                timeout(-1);
+                erase();
+                for (i=1014; i<1034; i++) {
 
-            printw("%i\t%f\n",i, myData.in[i]);
-            refresh();
+                    printw("%i\t%f\n",i, myData.in[i]);
+                    refresh();
 
-        }
-        refresh();
-        getch();
-        timeout(0);
-*/
+                }
+                refresh();
+                getch();
+                timeout(0);
+        */
         data.frameIndex = 0;
 
         stopKey = getch();
@@ -218,7 +221,7 @@ int recordStream(bandData band) {
 
     }
 
- //   fclose(pFile);
+//   fclose(pFile);
 
     timeout(-1);        // return to blocking mode
 
@@ -248,18 +251,18 @@ done:
     fftwf_free(myData.in);
     fftwf_free(myData.out);
     fftwf_destroy_plan(myData.method);
-/*
-    free( band.hind );
-    free( band.lind );
-    free( band.dmx );
-    free( band.dmx_size );
-    free( band.avg );
-    free( band.gain );
-    free( band.int_channels );
-*/
+    /*
+        free( band.hind );
+        free( band.lind );
+        free( band.dmx );
+        free( band.dmx_size );
+        free( band.avg );
+        free( band.gain );
+        free( band.int_channels );
+    */
     delete[] band.lind;
     delete[] band.hind;
-    for (i=0; i<band.maxidx; i++){
+    for (i=0; i<band.maxidx; i++) {
         delete[] band.dmx[i];
     }
     delete[] band.dmx;

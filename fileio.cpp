@@ -181,7 +181,6 @@ DMX_LOOP:
 bandData openFile(string presetName) {
     ifstream                preset;
     string                  line;
-    vector<int>             temp;
     vector<int>             int_channels;
     unsigned int            num_bands, num_channels, response,
              row, col, k, ind;
@@ -252,22 +251,22 @@ bandData openFile(string presetName) {
     }
 
 
-/*
-    band.idx = 0;
-    band.maxidx = num_bands;
-    band.lind = (int*) malloc( (num_bands - 1) * sizeof(int) );
-    band.hind = (int*) malloc( (num_bands - 1) * sizeof(int) );
-    band.dmx_size = (int*) malloc( num_bands * sizeof(int) );
-    band.dmx = (int**) malloc( (num_bands - 1) * sizeof(int*) );
-    band.avg = (double*) malloc( (num_bands - 1) * sizeof(double) );
-    band.gain = (float*) malloc( (num_bands - 1) * sizeof(float) );
-    band.int_channels = (int*) malloc( int_channels.size() * sizeof(int) );
-    for (k=0; k<int_channels.size(); k++) {
-        band.int_channels[k] = int_channels[k]-1;
-    }
-    k = 1;
-    band.num_int_channels = int_channels.size();
-*/
+    /*
+        band.idx = 0;
+        band.maxidx = num_bands;
+        band.lind = (int*) malloc( (num_bands - 1) * sizeof(int) );
+        band.hind = (int*) malloc( (num_bands - 1) * sizeof(int) );
+        band.dmx_size = (int*) malloc( num_bands * sizeof(int) );
+        band.dmx = (int**) malloc( (num_bands - 1) * sizeof(int*) );
+        band.avg = (double*) malloc( (num_bands - 1) * sizeof(double) );
+        band.gain = (float*) malloc( (num_bands - 1) * sizeof(float) );
+        band.int_channels = (int*) malloc( int_channels.size() * sizeof(int) );
+        for (k=0; k<int_channels.size(); k++) {
+            band.int_channels[k] = int_channels[k]-1;
+        }
+        k = 1;
+        band.num_int_channels = int_channels.size();
+    */
 
 
     band.idx = 0;
@@ -290,15 +289,15 @@ bandData openFile(string presetName) {
     refresh();
 
     if ( preset.is_open() ) {
+        stringstream    ss;
+        string          bandline = "BAND";
+        vector<int>             temp;
+        int             i, n, pos;
+        float           skip;
+        skip = SAMPLE_RATE / 2;
+        skip = skip / ( (FRAMES_PER_BUFFER + INPUT_PADDING)/2 - 1 );
         while ( k <= num_bands && getline(preset,line)) {
-            stringstream    ss;
-            string          bandline = "BAND";
-            int             i = 0;
-            int             n = 0;
-            int             pos;
-            float          skip;
-            skip = SAMPLE_RATE / 2;
-            skip = skip / ( (FRAMES_PER_BUFFER + INPUT_PADDING)/2 - 1 );
+            bandline = "BAND";
             ss << k;
             bandline += ss.str();
             getyx(stdscr,row,col);
