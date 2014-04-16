@@ -294,10 +294,12 @@ bandData openFile(string presetName) {
         vector<int>             temp;
         int             i, n, pos;
         float           skip;
+        int lind, hind;
         skip = SAMPLE_RATE / 2;
         skip = skip / ( (FRAMES_PER_BUFFER + INPUT_PADDING)/2 - 1 );
         while ( k <= num_bands && getline(preset,line)) {
             bandline = "BAND";
+            ss.str(std::string());
             ss << k;
             bandline += ss.str();
             getyx(stdscr,row,col);
@@ -307,9 +309,11 @@ bandData openFile(string presetName) {
                 refresh();
                 usleep(55000);
                 getline(preset,line);
+                lind = round( atoi(line.c_str()) / skip );
                 band.lind[k-1] = round( atoi(line.c_str()) / skip );
                 getline(preset,line);
                 band.hind[k-1] = round( atoi(line.c_str()) / skip );
+                hind = round( atoi(line.c_str()) / skip );
                 printw("Getting DMX channels for band %i\n",k);
                 refresh();
                 usleep(55000);
