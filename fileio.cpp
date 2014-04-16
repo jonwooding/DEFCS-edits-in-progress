@@ -275,6 +275,9 @@ bandData openFile(string presetName) {
     band.hind = new int[num_bands-1];
     band.dmx_size = new int[num_bands];
     band.dmx = new int*[num_bands-1];
+    for (int i=0; i<num_bands; i++ ){
+        band.dmx[i] = new int[10];
+    }
     band.avg = new float[num_bands-1];
     band.gain = new float[num_bands-1];
     band.int_channels = new int[int_channels.size()];
@@ -343,13 +346,13 @@ bandData openFile(string presetName) {
                 refresh();
                 usleep(55000);
                 band.gain[k-1] = 1 + atof(temparray) / GAIN_SCALE;
-                band.dmx[k-1] = new int[i];
+                //band.dmx[k-1] = new int[i];
                 for (n=0; n<=i; n++) {
                     band.dmx[k-1][n] = temp[n]-1;
                 }
                 band.dmx_size[k-1] = i;
                 temp.clear();
-                //i=0; 
+                //i=0;
                 k++;
             }
         }
