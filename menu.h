@@ -2,5 +2,5 @@
 #include "fileio.h"
 #include "dirList.h"
 
-bandData mainMenu();
+std::string mainMenu();
 int arrows(int num_options);

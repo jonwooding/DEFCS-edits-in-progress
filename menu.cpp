@@ -8,7 +8,7 @@
 
 #include "menu.h"
 
-bandData mainMenu() {
+std::string mainMenu() {
     int                 row, col, selection, k;
     int                 num_options;
 //    int                 *dirArray;
@@ -56,7 +56,6 @@ MAIN_MENU:
         selection = arrows(num_options)-1;
         fileName = path + dirlist[dirArray[selection]];
         delete [] dirArray;
-        band = openFile(fileName); //fileio.cpp
         refresh();
         break;
 
@@ -75,7 +74,7 @@ MAIN_MENU:
     }
 
     //free( dirArray );
-    return band;
+    return fileName;
 
 }
 

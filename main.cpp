@@ -26,6 +26,7 @@ void splash(void);
 
 int main(void) {
     bandData        band;       // structure for user's data
+    string          fileName;
     int             row, col;   // screen location
 
     initscr();              // setup terminal screen
@@ -44,7 +45,9 @@ int main(void) {
     /* This will only complete after a user loads a preset */
     /* Creating a new preset internally re-calls Main Menu */
 MAIN_MENU:
-    band = mainMenu();
+    fileName = mainMenu();
+    band = openFile(fileName); //fileio.cpp
+
     if ( band.maxidx == 0 ) {
         printw("Error! Please try again.\n");
         refresh();
