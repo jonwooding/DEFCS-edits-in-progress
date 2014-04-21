@@ -1,0 +1,5 @@
+NAME			./presets/AAA.txt
+BAND1
+60
+260
+DMX1
