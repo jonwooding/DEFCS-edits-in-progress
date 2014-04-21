@@ -52,7 +52,7 @@ int main(void) {
 MAIN_MENU:
     fileName = mainMenu();
     if (fileName == "0") {
-        endwin(); 	
+        endwin();
         return 0;
 }
     band = openFile(fileName); //fileio.cpp
@@ -92,6 +92,17 @@ void splash() {
     }
     move(R/4-2,0);
 
+    printw(  "    *****     ****  ****  ****   ****      *    * \n"    );
+    printw(  "   *    **   ***   ***   *      *    *    **   * \n"     );
+    printw(  "  **    **  *     *     **      *    *   *   ** \n");
+    printw(  " *******   ****  *       ****    ****   *    * \n");
+    printw(  "                         ****  ****  *** \n" );
+    printw(  "                          ***  *  *    *  \n");
+    printw(  "                            *  *  *    * \n");
+    printw(  "                        *****  ****  **** \n");
+    refresh();
+
+/*
     printw(  "      *****       ******   ******  ****    ****         *          * \n"    );
     printw(  "     **   **     *        *       *       *    *       ***        * \n"     );
     printw(  "    **    **    *        *       *       *      *     *  **      * \n"      );
@@ -106,7 +117,7 @@ void splash() {
     printw(  "                                                       * *     *     * \n");
     printw(  "                                                ******** ******* *******  \n");
     refresh();
-
+*/
     return;
 
 }
