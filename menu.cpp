@@ -7,6 +7,7 @@
 /** mainMenu() | arrows() **/
 
 #include "menu.h"
+#include "system_config.h"
 
 std::string mainMenu() {
     int                 row, col, selection, k;
@@ -87,10 +88,10 @@ int arrows(int num_options) {
 
     while ( ( resp = getch() ) != (char)'\n' ) {
         switch (resp) {
-        case '8': // UP
+        case UP: // UP
             row--;
             break;
-        case '2': // DOWN
+        case DOWN: // DOWN
             row++;
             break;
         }

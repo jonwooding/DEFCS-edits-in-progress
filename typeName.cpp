@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include "system_config.h"
 
 std::string namePreset(void);
 
@@ -21,20 +22,20 @@ std::string namePreset() {
     refresh();
     while ( ( ch = getch() ) != (char)'\n' ) {
         switch (ch) {
-        case '8':   // UP
+        case UP:
             sh++;
             mvaddch(row,col,sh);
             break;
-        case '2':   // DOWN
+        case DOWN:
             sh--;
             mvaddch(row,col,sh);
             break;
-        case '6':   // RIGHT
+        case RIGHT:
             col++;
             sh = 65;
             mvaddch(row,col,sh);
             break;
-        case '4':   // LEFT
+        case LEFT:
             if ( col == mincol ) {
                 break;
             }

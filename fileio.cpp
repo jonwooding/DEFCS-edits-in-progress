@@ -7,6 +7,7 @@
 #include "fileio.h"
 #include <math.h>
 #include "record.h"
+#include "system_config.h"
 
 int newPreset(string presetName) {
     ofstream                preset, copier;
@@ -33,25 +34,83 @@ int newPreset(string presetName) {
 getFreq:
         printw("\nEnter lower cutoff frequency: ");
         refresh();
-        while ( ( curr = getch() ) != '\n' ) {
-            printw("%c",curr);
-            refresh();
-            input[k] = curr;
-            k++;
+        if ( KEY == "numpad" ) {
+            k = 0;
+            while ( ( curr = getch() ) != '\n' ) {
+                printw("%c",curr);
+                refresh();
+                input[k] = curr;
+                k++;
+            }
+            lowFreq = atoi(input);
+            memset(input, '\0', 5);
+        } else if ( KEY == "arrow" ) {
+            int freq = 20;
+            getyx(stdscr,row,col);
+            printw("%i", freq);
+            move(row,col);
+            while ( ( response = getch() ) != '\n' ) {
+                switch (response) {
+                case UP:
+                    freq += 20;
+                    break;
+                case DOWN:
+                    freq -= 20;
+                    break;
+                case RIGHT:
+                    freq += 100;
+                    break;
+                case LEFT:
+                    freq -= 100;
+                    break;
+                }
+                if (freq<20) freq=20;
+                printw("%i    ", freq);
+                move(row,col);
+                refresh();
+                lowFreq = freq;
+            }
         }
-        lowFreq = atoi(input);
-        memset(input, '\0', 5);
         printw("\nEnter higher cutoff frequency: ");
         refresh();
-        k = 0;
-        while ( ( curr = getch() ) != '\n' ) {
-            printw("%c",curr);
-            refresh();
-            input[k] = curr;
-            k++;
+        if ( KEY == "numpad" ) {
+            k = 0;
+            while ( ( curr = getch() ) != '\n' ) {
+                printw("%c",curr);
+                refresh();
+                input[k] = curr;
+                k++;
+            }
+            hiFreq = atoi(input);
+            memset(input, '\0', 5);
+        } else if ( KEY == "arrow" ) {
+            int freq = lowFreq;
+            getyx(stdscr,row,col);
+            printw("%i", freq);
+            move(row,col);
+            while ( ( response = getch() ) != '\n' ) {
+                switch (response) {
+                case UP:
+                    freq += 20;
+                    break;
+                case DOWN:
+                    freq -= 20;
+                    break;
+                case RIGHT:
+                    freq += 100;
+                    break;
+                case LEFT:
+                    freq -= 100;
+                    break;
+                }
+                if (freq<20) freq=20;
+                printw("%i    ", freq);
+                move(row,col);
+                refresh();
+                hiFreq = freq;
+            }
         }
-        hiFreq = atoi(input);
-        memset(input, '\0', 5);
+
         // Check for valid data, repeat if invalid
         if ( (lowFreq > hiFreq) || (hiFreq > SAMPLE_RATE/2) || (lowFreq < 0) ) {
             printw("\nInvalid input, please try again.\n");
@@ -68,39 +127,100 @@ getFreq:
         printw("\n=========== Press '0' when you're done adding channels ===========\n\n");
         printw("Enter DMX channel %i: ",i);
         refresh();
-        k = 0;
-        while ( ( curr = getch() ) != '\n' ) {
-            printw("%c",curr);
-            refresh();
-            input[k] = curr;
-            k++;
-        }
-        response = atoi(input);
-        memset(input, '\0', 5);
-        preset << response << endl;
-        i++;
-DMX_LOOP:
-        printw("\nEnter DMX channel %i: ",i);
-        refresh();
-        while   ( ( ( curr = getch() ) != '0' ) ) {
+        if ( KEY == "numpad" ) {
             k = 0;
-            do  {
+            while ( ( curr = getch() ) != '\n' ) {
                 printw("%c",curr);
                 refresh();
                 input[k] = curr;
                 k++;
-            } while ( ( curr = getch() ) != '\n' );
-            response = atoi(input);
-            if ( response > 512 || response < 0 ) {
-                printw("\nInvalid input, try again\n");
-                memset(input, '\0', 5);
-                goto DMX_LOOP;
             }
+            response = atoi(input);
             memset(input, '\0', 5);
             preset << response << endl;
-            i++;
-            printw("\nEnter DMX channel %i: ",i);
+        } else if ( KEY == "arrow" ) {
+            int dmx = 1;
+            getyx(stdscr,row,col);
+            printw("%i    ",dmx);
+            move(row,col);
             refresh();
+            while ( ( response = getch() ) != '\n' ) {
+                switch (response) {
+                case UP:
+                    dmx++;
+                    break;
+                case DOWN:
+                    dmx--;
+                    break;
+                case RIGHT:
+                    dmx += 10;
+                    break;
+                case LEFT:
+                    dmx -= 10;
+                    break;
+                }
+                if (dmx<1) dmx=1;
+                if (dmx>512) dmx=512;
+                printw("%i    ", dmx);
+                move(row,col);
+                refresh();
+                preset << dmx << endl;
+            }
+        }
+
+        i++;
+DMX_LOOP:
+        printw("\nEnter DMX channel %i: ",i);
+        refresh();
+        while   ( ( ( curr = getch() ) != (char)STOP ) ) {
+            if ( KEY == "numpad" ) {
+                k = 0;
+                do  {
+                    printw("%c",curr);
+                    refresh();
+                    input[k] = curr;
+                    k++;
+                } while ( ( curr = getch() ) != '\n' );
+                response = atoi(input);
+                if ( response > 512 || response < 0 ) {
+                    printw("\nInvalid input, try again\n");
+                    memset(input, '\0', 5);
+                    goto DMX_LOOP;
+                }
+                memset(input, '\0', 5);
+                preset << response << endl;
+            } else if ( KEY == "arrow" ) {
+                int dmx = 1;
+                getyx(stdscr,row,col);
+                printw("%i    ",dmx);
+                move(row,col);
+                refresh();
+                while ( ( response = getch() ) != '\n' ) {
+                    switch (response) {
+                    case UP:
+                        dmx++;
+                        break;
+                    case DOWN:
+                        dmx--;
+                        break;
+                    case RIGHT:
+                        dmx += 10;
+                        break;
+                    case LEFT:
+                        dmx -= 10;
+                        break;
+                    }
+                    if (dmx<1) dmx=1;
+                    if (dmx>512) dmx=512;
+                    printw("%i    ", dmx);
+                    move(row,col);
+                    refresh();
+                    preset << dmx << endl;
+                }
+                i++;
+                printw("\nEnter DMX channel %i: ",i);
+                refresh();
+            }
         }
         num_channels += i-1;
         printw("\nThe gain controls how much the bandwidth will affect the lights.");
@@ -109,50 +229,110 @@ DMX_LOOP:
         getyx(stdscr, row, col);
         move(row, col-1);
         refresh();
-        input[0]  = '1';
-        k = 0;
-        while ( ( curr = getch() ) != '\n' ) {
-            printw("%c",curr);
+        if ( KEY == "numpad" ) {
+            input[0]  = '1';
+            k = 0;
+            while ( ( curr = getch() ) != '\n' ) {
+                printw("%c",curr);
+                refresh();
+                input[k] = curr;
+                k++;
+            }
+            response = atof(input);
+            if (abs(response) > 50) {
+                response = 1;
+                printw("\nOut of range. Using default [1].\n");
+                refresh();
+            }
+            memset(input, '\0', 5);
+        } else if ( KEY == "arrow" ) {
+            int resp = 0;
+            int gain = 1;
+            getyx(stdscr,row,col);
+            printw("%i    ", gain);
+            move(row,col);
             refresh();
-            input[k] = curr;
-            k++;
+            while ( (resp=getch()) != (char)'\n' ) {
+                switch (resp) {
+                case UP:
+                    gain++;
+                    if (gain>=GAIN_SCALE) gain = GAIN_SCALE;
+                    break;
+                case DOWN:
+                    gain--;
+                    if (gain<=-GAIN_SCALE) gain = -GAIN_SCALE;
+                    break;
+
+                }
+                printw("%i   ", gain);
+                move (row,col);
+                refresh();
+
+            }
+
         }
-        response = atof(input);
-        if (abs(response) > 50) {
-            response = 1;
-            printw("\nOut of range. Using default [1].\n");
-            refresh();
-        }
-        memset(input, '\0', 5);
         preset << "G" << response << endl;
 
         // Check for continue
-        printw("\nPress '0' to save and exit, press '1' to add another band. . .");
+        printw("\nPress %s to save and exit, press %s to add another band. . .", STOP_STR, SELECT_STR);
         refresh();
-        if ( ( curr = getch() ) == '0' ) break;
+        if ( ( curr = getch() ) == (char)STOP ) break;
         n++;
         k = 0;
     }
 
     printw("\n\nSome types of LED lights have an intensity channel\nthat will need to be turned on.");
     printw("\nEnter the address of any necessary intensity channels.\n");
-    printw("\t\t\t( PRESS '0' TO STOP )\n");
+    printw("\t\t\t( Press %s to stop )\n", STOP_STR);
     refresh();
-    while ( ( curr = getch() ) != '0' ) {
-        printw("%c",curr);
-        refresh();
-        k = 0;
-        input[k] = curr;
-        k = 1;
-        while ( ( curr = getch() ) != '\n' ) {
+    if ( KEY == "numpad" ) {
+        while ( ( curr = getch() ) != (char)STOP ) {
+
             printw("%c",curr);
             refresh();
+            k = 0;
             input[k] = curr;
-            k++;
+            k = 1;
+            while ( ( curr = getch() ) != '\n' ) {
+                printw("%c",curr);
+                refresh();
+                input[k] = curr;
+                k++;
+            }
+            printw("\n");
+            int_channels.push_back(atof(input));
+            memset(input, '\0', 5);
         }
-        printw("\n");
-        int_channels.push_back(atof(input));
-        memset(input, '\0', 5);
+    } else if ( KEY == "arrow" ) {
+        int resp = 0;
+        int nt = 1;
+        getyx(stdscr,row,col);
+        printw("%i   ", nt);
+        move(row,col);
+        refresh();
+        while ( (resp = getch()) != STOP ) {
+            do {
+                switch (resp) {
+                case UP:
+                    nt += 1;
+                    break;
+                case DOWN:
+                    nt -= 1;
+                    break;
+                case LEFT:
+                    nt -= 10;
+                case RIGHT:
+                    nt += 10;
+                }
+                printw("%i    ",nt);
+                move(row,col);
+                refresh();
+
+            } while ((resp = getch()) != '\n');
+            printw("%i\n",nt);
+            refresh();
+            int_channels.push_back(nt);
+        }
     }
 
     preset.close();
@@ -247,12 +427,10 @@ bandData openFile(string presetName) {
     preset.close();
     getyx(stdscr,row,col);
     chkend(row);
-    printw("\n\nPress '1' to load this preset.");
+    printw("\n\nPress %s to load this preset.", SELECT_STR);
     refresh();
     response = getch();
-    printw("%c",response);
-    refresh();
-    if ( response != '1' ) {
+    if ( response != SELECT ) {
         printw("\nReturning to main menu.\n");
         refresh();
         sleep(2);
@@ -284,8 +462,8 @@ bandData openFile(string presetName) {
     band.hind = new int[num_bands-1];
     band.dmx_size = new int[num_bands];
     band.dmx = new int*[num_bands-1];
-    for (int i=0; i<num_bands; i++ ){
-  //      band.dmx[i] = new int[10];
+    for (int i=0; i<num_bands; i++ ) {
+        //      band.dmx[i] = new int[10];
     }
     band.avg = new float[num_bands-1];
     band.gain = new float[num_bands-1];
