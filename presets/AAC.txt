@@ -1,9 +1,0 @@
-NAME			./presets/AAC.txt
-BAND1
-60
-160
-DMX1
-11
-21
-31
-41

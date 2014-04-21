@@ -51,7 +51,10 @@ int main(void) {
     /* Creating a new preset internally re-calls Main Menu */
 MAIN_MENU:
     fileName = mainMenu();
-    if (fileName == "0") return 0;
+    if (fileName == "0") {
+        endwin(); 	
+        return 0;
+}
     band = openFile(fileName); //fileio.cpp
 
     if ( band.maxidx == 0 ) {
