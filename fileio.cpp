@@ -170,8 +170,8 @@ getFreq:
                 move(row,col);
                 printw("%i    ", dmx);
                 refresh();
-                preset << dmx << endl;
             }
+            preset << dmx << endl;
         }
 
         i++;
