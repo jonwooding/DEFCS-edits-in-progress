@@ -181,10 +181,11 @@ DMX_LOOP:
 bandData openFile(string presetName) {
     ifstream                preset;
     string                  line;
-    vector<int>             int_channels;
-    unsigned int            num_bands, num_channels, response,
-             row, col, k, ind;
+    int                     num_bands, num_channels,
+                            row, col, k, ind;
+    int                     response;
     bandData                band;
+
     scrollok(stdscr, FALSE);
 
     band.maxidx = 0;
@@ -199,6 +200,7 @@ bandData openFile(string presetName) {
 
     // Display contents and close
     if (preset.is_open()) {
+        vector<int>     int_channels;
         while ( getline (preset,line) ) {
             if ( line == "INTENSITY_CHANNELS") {
                 //int_channels line
@@ -230,6 +232,13 @@ bandData openFile(string presetName) {
             getyx(stdscr,row,col);
             chkend(row);
         }
+
+        band.int_channels = new int[int_channels.size()];
+        for (k=0; k<int_channels.size(); k++) {
+            band.int_channels[k] = int_channels[k]-1;
+        }
+        band.num_int_channels = int_channels.size();
+
     } else {
         printw("Unable to open file.\n");
         return band;
@@ -268,7 +277,7 @@ bandData openFile(string presetName) {
         band.num_int_channels = int_channels.size();
     */
 
-
+    k = 1;
     band.idx = 0;
     band.maxidx = num_bands;
     band.lind = new int[num_bands-1];
@@ -276,17 +285,10 @@ bandData openFile(string presetName) {
     band.dmx_size = new int[num_bands];
     band.dmx = new int*[num_bands-1];
     for (int i=0; i<num_bands; i++ ){
-        band.dmx[i] = new int[10];
+  //      band.dmx[i] = new int[10];
     }
     band.avg = new float[num_bands-1];
     band.gain = new float[num_bands-1];
-    band.int_channels = new int[int_channels.size()];
-    for (k=0; k<int_channels.size(); k++) {
-        band.int_channels[k] = int_channels[k]-1;
-    }
-    k = 1;
-    band.num_int_channels = int_channels.size();
-
     preset.open(presetName.c_str());
     printw("\nLoading preset. . . \n");
     refresh();
@@ -302,7 +304,7 @@ bandData openFile(string presetName) {
         skip = skip / ( (FRAMES_PER_BUFFER + INPUT_PADDING)/2 - 1 );
         while ( k <= num_bands && getline(preset,line)) {
             i = 0;
-	    bandline = "BAND";
+            bandline = "BAND";
             ss.str(std::string());
             ss << k;
             bandline += ss.str();
@@ -332,7 +334,7 @@ bandData openFile(string presetName) {
                 while( getline(preset,line) && ( line != bandline ) ) {
                     pos = preset.tellg();
                     if ( line[0] == 'G' ) {
-                        for (ind=1; ind<line.length(); ind++) {
+                        for (ind=1; ind<=line.length(); ind++) {
                             temparray[ind-1] = line[ind];
                         }
                     }
@@ -340,14 +342,13 @@ bandData openFile(string presetName) {
                     i++;
                 }
                 i--;
-                i--; // for G selection
                 preset.seekg(pos);
-                printw("Retrieved %i channels. . .\n",i+1);
+                printw("Retrieved %i channels. . .\n",i);
                 refresh();
                 usleep(55000);
                 band.gain[k-1] = 1 + atof(temparray) / GAIN_SCALE;
-                //band.dmx[k-1] = new int[i];
-                for (n=0; n<=i; n++) {
+                band.dmx[k-1] = new int[i];
+                for (n=0; n<i; n++) {
                     band.dmx[k-1][n] = temp[n]-1;
                 }
                 band.dmx_size[k-1] = i;

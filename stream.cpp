@@ -174,7 +174,7 @@ int recordStream(bandData band) {
                     intensity -= 10;
                 }
 
-                for (i=0; i<=band.dmx_size[ind]; i++) {
+                for (i=0; i<band.dmx_size[ind]; i++) {
                     buffer.SetChannel(band.dmx[ind][i], intensity);
                 }
             }
@@ -265,9 +265,8 @@ done:
     for (i=0; i<band.maxidx; i++) {
         delete[] band.dmx[i];
     }
-    delete[] band.dmx;
     delete[] band.dmx_size;
-    delete[] band.avg;
+//    delete[] band.avg;
     delete[] band.gain;
     delete[] band.int_channels;
 

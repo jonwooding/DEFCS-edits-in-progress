@@ -4,7 +4,12 @@
     @version    1.02.14
 */
 
-/** \todo       convert to mono <><>
+/** \todo       SETTING FOR NUM/KEYS
+                GEN SETTINGS FILE
+                -GAIN
+                -SLEEP
+                BETTER PRESET HANDLING
+                convert to mono <><>
                 ^^ done but must be tested with UCA to see if it supports mono stream
                 ^^ on my hardware it just records 0 into R channel
                 ^^ alternate - record stereo but process mono (after analog summing)
