@@ -31,7 +31,8 @@ MAIN_MENU:
 
     printw("1. Load preset\n");
     printw("2. Create new preset\n");
-    num_options = 2;
+    printw("3. Exit\n");
+    num_options = 3;
     move(row,col);
     refresh();
     selection = arrows(num_options);    // UI Control function.
@@ -72,6 +73,8 @@ MAIN_MENU:
             goto MAIN_MENU;
         }
         break;
+    case 3:
+        return "0";
     }
 
     //free( dirArray );
