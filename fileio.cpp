@@ -22,6 +22,12 @@ int newPreset(string presetName) {
     unsigned int            n = 1;
     unsigned int            num_channels = 0;
 
+    if ( KEY == "numpad" ){
+        curs_set(2);
+    } else if ( KEY == "arrow" ) {
+        curs_set(0);
+    }
+
     // Open the preset
     preset.open(presetName.c_str());
     preset << "NAME\t\t\t" << presetName << endl;
@@ -47,8 +53,8 @@ getFreq:
         } else if ( KEY == "arrow" ) {
             int freq = 20;
             getyx(stdscr,row,col);
-            printw("%i", freq);
             move(row,col);
+            printw("%i   ", freq);
             while ( ( response = getch() ) != '\n' ) {
                 switch (response) {
                 case UP:
@@ -65,8 +71,8 @@ getFreq:
                     break;
                 }
                 if (freq<20) freq=20;
-                printw("%i    ", freq);
                 move(row,col);
+                printw("%i    ", freq);
                 refresh();
                 lowFreq = freq;
             }
@@ -86,8 +92,8 @@ getFreq:
         } else if ( KEY == "arrow" ) {
             int freq = lowFreq;
             getyx(stdscr,row,col);
-            printw("%i", freq);
             move(row,col);
+            printw("%i", freq);
             while ( ( response = getch() ) != '\n' ) {
                 switch (response) {
                 case UP:
@@ -104,8 +110,8 @@ getFreq:
                     break;
                 }
                 if (freq<20) freq=20;
-                printw("%i    ", freq);
                 move(row,col);
+                printw("%i    ", freq);
                 refresh();
                 hiFreq = freq;
             }
@@ -141,8 +147,8 @@ getFreq:
         } else if ( KEY == "arrow" ) {
             int dmx = 1;
             getyx(stdscr,row,col);
-            printw("%i    ",dmx);
             move(row,col);
+            printw("%i    ",dmx);
             refresh();
             while ( ( response = getch() ) != '\n' ) {
                 switch (response) {
@@ -161,8 +167,8 @@ getFreq:
                 }
                 if (dmx<1) dmx=1;
                 if (dmx>512) dmx=512;
-                printw("%i    ", dmx);
                 move(row,col);
+                printw("%i    ", dmx);
                 refresh();
                 preset << dmx << endl;
             }
@@ -192,8 +198,8 @@ DMX_LOOP:
             } else if ( KEY == "arrow" ) {
                 int dmx = 1;
                 getyx(stdscr,row,col);
-                printw("%i    ",dmx);
                 move(row,col);
+                printw("%i    ",dmx);
                 refresh();
                 while ( ( response = getch() ) != '\n' ) {
                     switch (response) {
@@ -212,11 +218,11 @@ DMX_LOOP:
                     }
                     if (dmx<1) dmx=1;
                     if (dmx>512) dmx=512;
-                    printw("%i    ", dmx);
                     move(row,col);
+                    printw("%i    ", dmx);
                     refresh();
-                    preset << dmx << endl;
                 }
+                preset << dmx << endl;
                 i++;
                 printw("\nEnter DMX channel %i: ",i);
                 refresh();
@@ -245,12 +251,13 @@ DMX_LOOP:
                 refresh();
             }
             memset(input, '\0', 5);
+            preset << "G" << response << endl;
         } else if ( KEY == "arrow" ) {
             int resp = 0;
             int gain = 1;
             getyx(stdscr,row,col);
-            printw("%i    ", gain);
             move(row,col);
+            printw("%i    ", gain);
             refresh();
             while ( (resp=getch()) != (char)'\n' ) {
                 switch (resp) {
@@ -264,14 +271,12 @@ DMX_LOOP:
                     break;
 
                 }
-                printw("%i   ", gain);
                 move (row,col);
+                printw("%i   ", gain);
                 refresh();
-
             }
-
+            preset << "G" << gain << endl;
         }
-        preset << "G" << response << endl;
 
         // Check for continue
         printw("\nPress %s to save and exit, press %s to add another band. . .", STOP_STR, SELECT_STR);
@@ -307,8 +312,8 @@ DMX_LOOP:
         int resp = 0;
         int nt = 1;
         getyx(stdscr,row,col);
-        printw("%i   ", nt);
         move(row,col);
+        printw("%i   ", nt);
         refresh();
         while ( (resp = getch()) != STOP ) {
             do {
@@ -324,11 +329,12 @@ DMX_LOOP:
                 case RIGHT:
                     nt += 10;
                 }
-                printw("%i    ",nt);
                 move(row,col);
+                printw("%i    ",nt);
                 refresh();
 
             } while ((resp = getch()) != '\n');
+            move(row,col);
             printw("%i\n",nt);
             refresh();
             int_channels.push_back(nt);
@@ -354,6 +360,8 @@ DMX_LOOP:
     remove(presetName.c_str());
     rename("temp.txt",presetName.c_str());
     remove("temp.txt");
+
+    curs_set(2);
 
     return 1;
 }
